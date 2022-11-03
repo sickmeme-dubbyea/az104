@@ -300,7 +300,7 @@
 		{
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2019-03-01",
-            "name": "[variables('backendSERVER2_name]",
+            "name": "[variables('backendSERVER2_name']",
             "location": "[resourceGroup().location]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/networkInterfaces', variables('backendSERVER2_name'))]"
