@@ -41,8 +41,8 @@
     },
     "variables": {
 		"name_backendSERVER2": "server31",
-        "nic_backendserver2": "[concat(variables('name_backendSERVER2'), '_nic')]",
-        "publicip_backendserver2" : "[concat(variables('name_backendSERVER2'), '_pip')]"
+        "nic_backendserver2": "server31_nic",
+        "publicip_backendserver2" : "server31_pip'"
 	},
     "resources": [
         {
@@ -208,6 +208,7 @@
                     "tier": "Regional"
                 },
                 "properties": {
+                    "ipAddress": "13.84.179.180",
                     "publicIPAddressVersion": "IPv4",
                     "publicIPAllocationMethod": "Dynamic",
                     "idleTimeoutInMinutes": 4,
@@ -467,7 +468,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Network/publicIPAddresses', variables('nic_backendserver2'))]",
                 "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_BeardSite_vnet_name'), 'default')]",
-                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_backendSERVER_nsg_name'))]"
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters  ('networkSecurityGroups_backendSERVER_nsg_name'))]"
             ],
             "tags": {
                 "BeardSite": "[resourceGroup().location]"
@@ -479,6 +480,9 @@
                         "properties": {
                             "privateIPAddress": "10.0.4.69",
                             "privateIPAllocationMethod": "Dynamic",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicip_backendserver2'))]"
+                            },
                             "subnet": {
                                 "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_BeardSite_vnet_name'), 'default')]"
                             },
