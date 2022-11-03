@@ -1,5 +1,5 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.1",
     "parameters": {
         "virtualMachines_backendSERVER_name": {
@@ -40,7 +40,7 @@
         }
     },
     "variables": {
-		"backendSERVER2_name": "server2",
+		"backendSERVER2_name": "server31",
         "networkInterface_backendserver2": "server2_nic"
 	},
     "resources": [
@@ -304,7 +304,7 @@
             "name": "[variables('backendSERVER2_name')]",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/networkInterfaces', variables('backendSERVER2_name'))]"
+                "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterface_backendserver2'))]"
             ],
             "tags": {
                 "BeardSite": "[resourceGroup().location]"
@@ -333,7 +333,7 @@
                     "dataDisks": []
                 },
                 "osProfile": {
-                    "computerName": "[variables('backendSERVER2_name')",
+                    "computerName": "[variables('backendSERVER2_name')]",
                     "adminUsername": "beardmin",
                     "adminPassword": "mM%Vc!562yTj",
                     "windowsConfiguration": {
@@ -437,7 +437,7 @@
                     {
                         "name": "ipconfig1",
                         "properties": {
-                            "privateIPAddress": "10.0.4.4",
+                            "privateIPAddress": "10.0.4.69",
                             "privateIPAllocationMethod": "Dynamic",
                             "subnet": {
                                 "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_BeardSite_vnet_name'), 'default')]"
