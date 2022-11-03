@@ -42,7 +42,7 @@
     "variables": {
 		"name_backendSERVER2": "server31",
         "nic_backendserver2": "server31_nic",
-        "publicip_backendserver2" : "server31_pip'"
+        "publicip_backendserver2" : "server31_pip"
 	},
     "resources": [
         {
@@ -198,7 +198,7 @@
             {
                 "type": "Microsoft.Network/publicIPAddresses",
                 "apiVersion": "2019-07-01",
-                "name": "[variables('publicIP_backendserver2')]",
+                "name": "[variables('publicip_backendserver2')]",
                 "location": "[resourceGroup().location]",
                 "tags": {
                     "BeardSite": "[resourceGroup().location]"
@@ -466,7 +466,7 @@
             "name": "[variables('nic_backendserver2')]",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/publicIPAddresses', variables('nic_backendserver2'))]",
+                "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicip_backendserver2'))]",
                 "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_BeardSite_vnet_name'), 'default')]",
                 "[resourceId('Microsoft.Network/networkSecurityGroups', parameters  ('networkSecurityGroups_backendSERVER_nsg_name'))]"
             ],
