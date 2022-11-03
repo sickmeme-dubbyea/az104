@@ -40,7 +40,8 @@
         }
     },
     "variables": {
-		"backendSERVER2_name": "server2"
+		"backendSERVER2_name": "server2",
+        "networkInterface_backendserver2": "server2_nic"
 	},
     "resources": [
         {
@@ -300,7 +301,7 @@
 		{
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2019-03-01",
-            "name": "[variables('backendSERVER2_name']",
+            "name": "[variables('backendSERVER2_name')]",
             "location": "[resourceGroup().location]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/networkInterfaces', variables('backendSERVER2_name'))]"
@@ -419,6 +420,44 @@
                 "privateLinkServiceNetworkPolicies": "Enabled"
             }
         },
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2019-07-01",
+            "name": "[variables('networkInterface_backendserver2')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_backendSERVER_ip_name'))]",                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_BeardSite_vnet_name'), 'default')]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_backendSERVER_nsg_name'))]"
+            ],
+            "tags": {
+                "BeardSite": "[resourceGroup().location]"
+            },
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAddress": "10.0.4.4",
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_BeardSite_vnet_name'), 'default')]"
+                            },
+                            "primary": true,
+                            "privateIPAddressVersion": "IPv4"
+                        }
+                    }
+                ],
+                "dnsSettings": {
+                    "dnsServers": []
+                },
+                "enableAcceleratedNetworking": false,
+                "enableIPForwarding": false,
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_backendSERVER_nsg_name'))]"
+                }
+            }
+        },
+        
         {
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2019-07-01",
