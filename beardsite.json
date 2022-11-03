@@ -1,12 +1,8 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-    "contentVersion": "1.0.0.2",
+    "contentVersion": "1.0.0.1",
     "parameters": {
         "virtualMachines_backendSERVER_name": {
-            "defaultValue": "backendSERVER",
-            "type": "String"
-        },
-        "virtualMachines_backendSERVER2_name": {
             "defaultValue": "backendSERVER",
             "type": "String"
         },
@@ -44,9 +40,8 @@
         }
     },
     "variables": {
-        "backendSERVER2_name": "server2"
-
-    },
+		"backendSERVER2_name": "server2"
+	},
     "resources": [
         {
             "type": "Microsoft.Network/networkSecurityGroups",
@@ -137,7 +132,7 @@
                             "destinationPortRanges": [],
                             "sourceAddressPrefixes": [],
                             "destinationAddressPrefixes": []
-                        }  
+                        }
                     },
                     {
                         "name": "RDP",
@@ -154,7 +149,7 @@
                             "destinationPortRanges": [],
                             "sourceAddressPrefixes": [],
                             "destinationAddressPrefixes": []
-                        }  
+                        }
                     }
                 ]
             }
@@ -176,7 +171,26 @@
                 "publicIPAddressVersion": "IPv4",
                 "publicIPAllocationMethod": "Dynamic",
                 "idleTimeoutInMinutes": 4,
-                "ipTags": []
+                "ipTags": [],
+                "securityrules": [
+                    {
+                        "name": "SSH",
+                        "properties": {
+                            "protocol": "TCP",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "22",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 300,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    }
+                ]
             }
         },
         {
@@ -283,7 +297,7 @@
                 }
             }
         },
-        {
+		{
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2019-03-01",
             "name": "[variables('backendSERVER2_name]",
