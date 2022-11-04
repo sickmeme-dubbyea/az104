@@ -1,5 +1,5 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.1",
     "parameters": {
         "virtualMachines_backendSERVER_name": {
@@ -39,11 +39,7 @@
             "type": "String"
         }
     },
-    "variables": {
-        "name_backendSERVER2": "server31",
-        "nic_backendserver2": "server31_nic",
-        "publicip_backendserver2": "server31_pip"
-    },
+    "variables": {},
     "resources": [
         {
             "type": "Microsoft.Network/networkSecurityGroups",
@@ -134,7 +130,7 @@
                             "destinationPortRanges": [],
                             "sourceAddressPrefixes": [],
                             "destinationAddressPrefixes": []
-                        }
+                        }  
                     },
                     {
                         "name": "RDP",
@@ -151,7 +147,7 @@
                             "destinationPortRanges": [],
                             "sourceAddressPrefixes": [],
                             "destinationAddressPrefixes": []
-                        }
+                        }  
                     }
                 ]
             }
@@ -173,65 +169,7 @@
                 "publicIPAddressVersion": "IPv4",
                 "publicIPAllocationMethod": "Dynamic",
                 "idleTimeoutInMinutes": 4,
-                "ipTags": [],
-                "securityrules": [
-                    {
-                        "name": "SSH",
-                        "properties": {
-                            "protocol": "TCP",
-                            "sourcePortRange": "*",
-                            "destinationPortRange": "22",
-                            "sourceAddressPrefix": "*",
-                            "destinationAddressPrefix": "*",
-                            "access": "Allow",
-                            "priority": 300,
-                            "direction": "Inbound",
-                            "sourcePortRanges": [],
-                            "destinationPortRanges": [],
-                            "sourceAddressPrefixes": [],
-                            "destinationAddressPrefixes": []
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            "type": "Microsoft.Network/publicIPAddresses",
-            "apiVersion": "2019-07-01",
-            "name": "[variables('publicip_backendserver2')]",
-            "location": "[resourceGroup().location]",
-            "tags": {
-                "BeardSite": "[resourceGroup().location]"
-            },
-            "sku": {
-                "name": "Basic",
-                "tier": "Regional"
-            },
-            "properties": {
-                "ipAddress": "13.84.179.180",
-                "publicIPAddressVersion": "IPv4",
-                "publicIPAllocationMethod": "Dynamic",
-                "idleTimeoutInMinutes": 4,
-                "ipTags": [],
-                "securityrules": [
-                    {
-                        "name": "SSH",
-                        "properties": {
-                            "protocol": "TCP",
-                            "sourcePortRange": "*",
-                            "destinationPortRange": "22",
-                            "sourceAddressPrefix": "*",
-                            "destinationAddressPrefix": "*",
-                            "access": "Allow",
-                            "priority": 300,
-                            "direction": "Inbound",
-                            "sourcePortRanges": [],
-                            "destinationPortRanges": [],
-                            "sourceAddressPrefixes": [],
-                            "destinationAddressPrefixes": []
-                        }
-                    }
-                ]
+                "ipTags": []
             }
         },
         {
@@ -265,7 +203,7 @@
             "properties": {
                 "addressSpace": {
                     "addressPrefixes": [
-                        "10.0.4.0/24"
+                        "10.0.4.0/23"
                     ]
                 },
                 "subnets": [
@@ -273,6 +211,15 @@
                         "name": "default",
                         "properties": {
                             "addressPrefix": "10.0.4.0/24",
+                            "delegations": [],
+                            "privateEndpointNetworkPolicies": "Enabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        }
+                    },
+                    {
+                        "name": "secret",
+                        "properties": {
+                            "addressPrefix": "10.0.5.0/24",
                             "delegations": [],
                             "privateEndpointNetworkPolicies": "Enabled",
                             "privateLinkServiceNetworkPolicies": "Enabled"
@@ -333,60 +280,6 @@
                     "networkInterfaces": [
                         {
                             "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_backendserver889_name'))]"
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "type": "Microsoft.Compute/virtualMachines",
-            "apiVersion": "2019-03-01",
-            "name": "[variables('name_backendSERVER2')]",
-            "location": "[resourceGroup().location]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Network/networkInterfaces', variables('nic_backendserver2'))]"
-            ],
-            "tags": {
-                "BeardSite": "[resourceGroup().location]"
-            },
-            "properties": {
-                "hardwareProfile": {
-                    "vmSize": "Standard_B1s"
-                },
-                "storageProfile": {
-                    "imageReference": {
-                        "publisher": "MicrosoftWindowsServer",
-                        "offer": "WindowsServer",
-                        "sku": "2016-Datacenter",
-                        "version": "latest"
-                    },
-                    "osDisk": {
-                        "osType": "Windows",
-                        "name": "[concat(variables('name_backendSERVER2'), '_OsDisk_1_ef3ab3c577ea4dd5827852baae056008')]",
-                        "createOption": "FromImage",
-                        "caching": "ReadWrite",
-                        "managedDisk": {
-                            "storageAccountType": "Standard_LRS"
-                        },
-                        "diskSizeGB": 127
-                    },
-                    "dataDisks": []
-                },
-                "osProfile": {
-                    "computerName": "[variables('name_backendSERVER2')]",
-                    "adminUsername": "beardmin",
-                    "adminPassword": "mM%Vc!562yTj",
-                    "windowsConfiguration": {
-                        "provisionVMAgent": true,
-                        "enableAutomaticUpdates": true
-                    },
-                    "secrets": [],
-                    "allowExtensionOperations": true
-                },
-                "networkProfile": {
-                    "networkInterfaces": [
-                        {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nic_backendserver2'))]"
                         }
                     ]
                 }
@@ -461,44 +354,17 @@
             }
         },
         {
-            "type": "Microsoft.Network/networkInterfaces",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
             "apiVersion": "2019-07-01",
-            "name": "[variables('nic_backendserver2')]",
-            "location": "[resourceGroup().location]",
+            "name": "[concat(parameters('virtualNetworks_BeardSite_vnet_name'), '/secret')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicip_backendserver2'))]",
-                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_BeardSite_vnet_name'), 'default')]",
-                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters  ('networkSecurityGroups_backendSERVER_nsg_name'))]"
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_BeardSite_vnet_name'))]"
             ],
-            "tags": {
-                "BeardSite": "[resourceGroup().location]"
-            },
             "properties": {
-                "ipConfigurations": [
-                    {
-                        "name": "ipconfig1",
-                        "properties": {
-                            "privateIPAddress": "10.0.4.6",
-                            "privateIPAllocationMethod": "Dynamic",
-                            "publicIPAddress": {
-                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicip_backendserver2'))]"
-                            },
-                            "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_BeardSite_vnet_name'), 'default')]"
-                            },
-                            "primary": true,
-                            "privateIPAddressVersion": "IPv4"
-                        }
-                    }
-                ],
-                "dnsSettings": {
-                    "dnsServers": []
-                },
-                "enableAcceleratedNetworking": false,
-                "enableIPForwarding": false,
-                "networkSecurityGroup": {
-                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_backendSERVER_nsg_name'))]"
-                }
+                "addressPrefix": "10.0.5.0/24",
+                "delegations": [],
+                "privateEndpointNetworkPolicies": "Enabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
             }
         },
         {
